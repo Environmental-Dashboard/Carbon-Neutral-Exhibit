@@ -27,6 +27,22 @@
  */
 
 #include <FastLED.h>
+#include <WiFi.h>
+#include <ArduinoOTA.h>
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ *                    SECTION 0: WIFI & OTA CONFIGURATION  ← CHANGE THIS
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 
+ *  WiFi credentials for OTA (Over-The-Air) updates.
+ *  After initial USB upload, you can update this code via WiFi!
+ * 
+ *  In Arduino IDE: Tools → Port → select "esp32-led at [IP address]"
+ */
+
+const char* wifiSSID = "ObieConnect";        // <-- Your WiFi network name
+const char* wifiPassword = "122ElmStreet";   // <-- Your WiFi password
+const char* otaHostname = "esp32-led";       // <-- Name shown in Arduino IDE
 
 /* ═══════════════════════════════════════════════════════════════════════════
  *                    SECTION 1: HARDWARE WIRING (PINS)
@@ -235,6 +251,7 @@ void oneDotPass(CRGB* leds, int numLeds, CRGB color, bool reverse, int delayMs) 
       leds[pos] = color;           // Light up current position
       FastLED.show();              // Send to hardware
       delay(delayMs);              // Wait before moving to next
+      ArduinoOTA.handle();         // Check for OTA updates
     }
   } else {
     // Reverse direction: Last LED → ... → LED 2 → LED 1 → LED 0
@@ -243,6 +260,7 @@ void oneDotPass(CRGB* leds, int numLeds, CRGB color, bool reverse, int delayMs) 
       leds[pos] = color;
       FastLED.show();
       delay(delayMs);
+      ArduinoOTA.handle();         // Check for OTA updates
     }
   }
 }
@@ -283,6 +301,9 @@ void runStage(CRGB* leds, int numLeds, CRGB color, bool reverse, int delayMs) {
  *   order setting might be incorrect for that strip.
  */
 void setup() {
+  Serial.begin(115200);
+  Serial.println("\n\nWater & Electricity Metering System Starting...");
+  
   // Set overall brightness for all strips
   FastLED.setBrightness(BRIGHTNESS_LEVEL);
 
@@ -294,6 +315,48 @@ void setup() {
 
   // Start with all LEDs off
   clearAllLeds();
+  
+  // Connect to WiFi for OTA updates
+  Serial.print("Connecting to WiFi: ");
+  Serial.println(wifiSSID);
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(wifiSSID, wifiPassword);
+  
+  int attempts = 0;
+  while (WiFi.status() != WL_CONNECTED && attempts < 40) {
+    delay(250);
+    Serial.print(".");
+    attempts++;
+  }
+  
+  if (WiFi.status() == WL_CONNECTED) {
+    Serial.println("\n✓ WiFi Connected!");
+    Serial.print("IP Address: ");
+    Serial.println(WiFi.localIP());
+    
+    // Initialize OTA updates
+    ArduinoOTA.setHostname(otaHostname);
+    ArduinoOTA.onStart([]() { Serial.println("OTA Update Starting..."); });
+    ArduinoOTA.onEnd([]() { Serial.println("\nOTA Update Complete!"); });
+    ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
+      Serial.printf("OTA Progress: %u%%\r", (progress / (total / 100)));
+    });
+    ArduinoOTA.onError([](ota_error_t error) { Serial.printf("OTA Error[%u]\n", error); });
+    ArduinoOTA.begin();
+    
+    Serial.println("============================================");
+    Serial.println("OTA ENABLED - Upload via WiFi:");
+    Serial.print("  Hostname: ");
+    Serial.println(otaHostname);
+    Serial.print("  IP: ");
+    Serial.println(WiFi.localIP());
+    Serial.println("============================================");
+  } else {
+    Serial.println("\nWiFi not connected - OTA disabled");
+    Serial.println("LED animations will still run normally.");
+  }
+  
+  Serial.println("Starting LED animations...");
 }
 
 /*
@@ -310,6 +373,9 @@ void setup() {
  *   Then all lights go dark for a few seconds, and it repeats.
  */
 void loop() {
+  // Handle OTA updates (check for incoming uploads)
+  ArduinoOTA.handle();
+  
   // ═══ ACT 1: WATER FLOW ═══
   // Sea blue dot moves forward (left to right)
   // Represents physical water flowing through the meters
