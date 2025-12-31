@@ -365,6 +365,7 @@ void setup() {
   
   // Initialize OTA (Over-The-Air) updates
   ArduinoOTA.setHostname(otaHostname);
+  ArduinoOTA.setPassword("132ElmStreet");  // OTA password for security
   ArduinoOTA.onStart([]() { Serial.println("OTA Update Starting..."); });
   ArduinoOTA.onEnd([]() { Serial.println("\nOTA Update Complete!"); });
   ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {

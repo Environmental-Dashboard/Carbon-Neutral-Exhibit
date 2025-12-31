@@ -66,8 +66,8 @@ void setup() {
   // Setup OTA
   ArduinoOTA.setHostname(otaHostname);
   
-  // Optional: Set OTA password for security
-  // ArduinoOTA.setPassword("admin");
+  // OTA password for security
+  ArduinoOTA.setPassword("132ElmStreet");
   
   // OTA callbacks for status feedback
   ArduinoOTA.onStart([]() {
