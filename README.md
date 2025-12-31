@@ -22,7 +22,7 @@ This repository contains multiple sub-projects, each controlling a different par
 | Folder | Description | Status |
 |--------|-------------|--------|
 | [Water-Electricity-Metering-System](./Water-Electricity-Metering-System/) | LED visualization showing water and electricity flow with 4 animated LED strips | ✅ Complete |
-| *More components coming soon* | Additional exhibit modules will be added here | 🔄 Planned |
+| [ESP32-Relay-Controller](./ESP32-Relay-Controller/) | Web-based relay controller for 8 exhibit devices with auto-cycle and night mode | ✅ Complete |
 
 ---
 
@@ -34,8 +34,13 @@ CARBON-NEUTRAL-EXHIBITION/
 ├── README.md                              ← You are here
 │
 ├── Water-Electricity-Metering-System/     ← LED flow visualization
-│   ├── led_visualization.ino              ← Arduino/ESP32 code
-│   └── README.md                          ← Setup & customization guide
+│   ├── led_visualization.ino
+│   └── README.md
+│
+├── ESP32-Relay-Controller/                ← 8-channel relay controller
+│   ├── ESP32_RelayController.ino
+│   ├── ElectricityButton.gif
+│   └── README.md
 │
 └── [Future Components]/                   ← More exhibits to be added
 ```
@@ -61,6 +66,34 @@ Controls 4 LED strips that animate in sequence to show:
 - 5V power supply
 
 👉 See [Water-Electricity-Metering-System/README.md](./Water-Electricity-Metering-System/README.md) for detailed setup instructions.
+
+### ESP32-Relay-Controller
+
+Controls 8 relay channels for exhibit devices with a web interface:
+
+| Relay | Device | Duration |
+|-------|--------|----------|
+| 1 | Light - Incandescent | 10 sec |
+| 2 | Light - CFL | 10 sec |
+| 3 | Light - LED | 10 sec |
+| 4 | Lava Lamp | 63 sec |
+| 5 | Hair Dryer | 7 sec |
+| 6 | Mini-Fridge | 30 sec |
+| 7 | Meters & Data | 70 sec |
+| 8 | Geothermal | 86 sec |
+
+**Features:**
+- Mobile-friendly web interface
+- Auto-cycle mode for unattended operation
+- Night mode (Lava Lamp only during off-hours)
+- Dual WiFi mode (connects to network or creates access point)
+
+**Hardware Required:**
+- ESP32 microcontroller
+- 8-channel relay module
+- 5V power supply
+
+👉 See [ESP32-Relay-Controller/README.md](./ESP32-Relay-Controller/README.md) for detailed setup instructions.
 
 ---
 
