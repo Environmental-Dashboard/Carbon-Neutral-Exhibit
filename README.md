@@ -1,226 +1,114 @@
-# Water and Electricity Metering System
+# Carbon Neutral Exhibition
 
-A visual LED display system that demonstrates water and electricity flow in a museum/exhibit setting. Uses 4 LED strips with sequential animations to represent physical flow and data transmission.
-
-## Features
-
-- **4 Independent LED Strips**: Water Flow, Water Data, Electricity Flow, Electricity Data
-- **Sequential Animation**: Each strip performs like actors on a stage—one at a time
-- **Customizable Colors**: Sea blue for water, orange for electricity/data
-- **Adjustable Speed**: Control animation timing per strip or globally
-- **Beginner-Friendly Code**: Clearly marked sections for easy customization
+An interactive museum exhibition demonstrating sustainability, energy efficiency, and environmental monitoring concepts. This repository contains all the components that make up the Carbon Neutral Exhibition display system.
 
 ---
 
-## Hardware Requirements
+## Overview
 
-| Component | Specification |
-|-----------|---------------|
-| Microcontroller | ESP32 Development Board |
-| LED Strips | WS2812B Addressable LED Strips (4 total) |
-| Power Supply | 5V 2A minimum (more for longer strips) |
-| Wiring | Jumper wires for GPIO connections |
+The Carbon Neutral Exhibition is an educational display that helps visitors understand:
 
-### GPIO Pin Mapping
-
-| LED Strip | Purpose | GPIO Pin | LED Count | Color Order |
-|-----------|---------|----------|-----------|-------------|
-| Water Flow | Physical water movement | GPIO 2 (D2) | 20 LEDs | BGR |
-| Water Data | Data from meters to logger | GPIO 4 (D4) | 5 LEDs | RGB |
-| Electricity Flow | Current in main line | GPIO 18 (D18) | 15 LEDs | GRB |
-| Electricity Data | Measurements to logger | GPIO 5 (D5) | 7 LEDs | RGB |
+- **Water Usage**: How water flows through meters and how consumption is measured
+- **Electricity Consumption**: How electrical current flows and how usage is tracked
+- **Data Transmission**: How meter readings are sent to data loggers for monitoring
+- **Energy Efficiency**: Comparing different technologies and their environmental impact
 
 ---
 
-## Configuration Guide
+## Exhibition Components
 
-### 1. LED Strip Lengths
+This repository contains multiple sub-projects, each controlling a different part of the exhibition:
 
-If your strips have different LED counts, update these values:
+| Folder | Description | Status |
+|--------|-------------|--------|
+| [Water-Electricity-Metering-System](./Water-Electricity-Metering-System/) | LED visualization showing water and electricity flow with 4 animated LED strips | ✅ Complete |
+| *More components coming soon* | Additional exhibit modules will be added here | 🔄 Planned |
 
-```cpp
-#define NUM_WATER_FLOW_LEDS   20    // Water Flow strip
-#define NUM_WATER_DATA_LEDS   5     // Water Data strip
-#define NUM_ELEC_FLOW_LEDS    15    // Electricity Flow strip
-#define NUM_ELEC_DATA_LEDS    7     // Electricity Data strip
+---
+
+## Project Structure
+
+```
+CARBON-NEUTRAL-EXHIBITION/
+│
+├── README.md                              ← You are here
+│
+├── Water-Electricity-Metering-System/     ← LED flow visualization
+│   ├── led_visualization.ino              ← Arduino/ESP32 code
+│   └── README.md                          ← Setup & customization guide
+│
+└── [Future Components]/                   ← More exhibits to be added
 ```
 
 ---
 
-### 2. Colors
+## Hardware Overview
 
-Colors use RGB format: `CRGB(Red, Green, Blue)` where each value is 0-255.
+### Water-Electricity-Metering-System
 
-```cpp
-#define COLOR_SEA_BLUE   CRGB(0, 160, 200)    // Water Flow color
-#define COLOR_ORANGE     CRGB(255, 90, 0)     // All other strips
-```
+Controls 4 LED strips that animate in sequence to show:
 
-#### Common Color Values
+| LED Strip | Purpose | Color |
+|-----------|---------|-------|
+| Water Flow | Physical water movement through meters | 🔵 Sea Blue |
+| Water Data | Data transmission from water meters | 🟠 Orange |
+| Electricity Flow | Electric current in main line | 🟠 Orange |
+| Electricity Data | Electrical measurements to logger | 🟠 Orange |
 
-| Color | Code |
-|-------|------|
-| Red | `CRGB(255, 0, 0)` |
-| Green | `CRGB(0, 255, 0)` |
-| Blue | `CRGB(0, 0, 255)` |
-| Yellow | `CRGB(255, 255, 0)` |
-| Purple | `CRGB(255, 0, 255)` |
-| Cyan | `CRGB(0, 255, 255)` |
-| White | `CRGB(255, 255, 255)` |
-| Orange (less red) | `CRGB(255, 150, 0)` |
+**Hardware Required:**
+- ESP32 microcontroller
+- WS2812B LED strips (4 total)
+- 5V power supply
+
+👉 See [Water-Electricity-Metering-System/README.md](./Water-Electricity-Metering-System/README.md) for detailed setup instructions.
 
 ---
 
-### 3. Animation Speed
+## Getting Started
 
-Speed is in milliseconds. Higher = slower animation.
+### Prerequisites
 
-```cpp
-#define SPEED_MS_GLOBAL   350    // All strips use this speed
-```
+- [Arduino IDE](https://www.arduino.cc/en/software) installed
+- ESP32 board support installed in Arduino IDE
+- FastLED library installed
 
-#### Speed Reference
+### Quick Start
 
-| Value | Description |
-|-------|-------------|
-| 100 | Fast |
-| 200 | Medium-fast |
-| 350 | Medium (default) |
-| 500 | Slow |
-| 1000 | Very slow (1 sec/LED) |
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/Environmental-Dashboard/CARBON-NEUTRAL-EXHIBITION.git
+   ```
 
-#### Individual Strip Speeds
+2. Navigate to the component you want to set up:
+   ```bash
+   cd CARBON-NEUTRAL-EXHIBITION/Water-Electricity-Metering-System
+   ```
 
-```cpp
-#define DELAY_WATER_FLOW   300    // Faster water
-#define DELAY_WATER_DATA   400    // Slower data
-#define DELAY_ELEC_FLOW    300    // Faster electricity
-#define DELAY_ELEC_DATA    400    // Slower data
-```
+3. Open the `.ino` file in Arduino IDE
+
+4. Follow the README in that folder for wiring and configuration
 
 ---
 
-### 4. Brightness
+## Adding New Components
 
-```cpp
-#define BRIGHTNESS_LEVEL   150    // Range: 0-255
-```
+To add a new exhibit component to this repository:
 
-| Value | Description |
-|-------|-------------|
-| 50 | Dim (dark rooms) |
-| 100 | Medium |
-| 150 | Bright (default) |
-| 255 | Maximum |
+1. Create a new folder with a descriptive name
+2. Add your code files
+3. Include a README.md with setup instructions
+4. Update this main README to list the new component
 
 ---
 
-### 5. Animation Behavior
+## Contributing
 
-```cpp
-#define CYCLES_PER_STAGE        4       // Passes per strip before next
-#define PAUSE_BETWEEN_STAGES    500     // Pause between strips (ms)
-#define PAUSE_AFTER_FULL_CYCLE  3000    // Pause after all 4 complete (ms)
-```
+Contributions are welcome! To contribute:
 
----
-
-### 6. Color Order Fix
-
-If colors appear wrong (e.g., blue instead of red), change the color order in `setup()`:
-
-```cpp
-FastLED.addLeds<WS2812B, PIN_WATER_FLOW, BGR>(waterFlowLeds, NUM_WATER_FLOW_LEDS);
-//                                       ^^^
-//                       Try: RGB, GRB, BGR, BRG, RBG, GBR
-```
-
----
-
-## Installation
-
-### Arduino IDE Setup
-
-1. **Install ESP32 Board Support**:
-   - Go to `File` → `Preferences`
-   - Add to "Additional Board Manager URLs":
-     ```
-     https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
-     ```
-   - Go to `Tools` → `Board` → `Boards Manager`
-   - Search "ESP32" and install "esp32 by Espressif Systems"
-
-2. **Install FastLED Library**:
-   - Go to `Sketch` → `Include Library` → `Manage Libraries`
-   - Search "FastLED" and install "FastLED by Daniel Garcia"
-
-3. **Select Board**:
-   - `Tools` → `Board` → `ESP32 Dev Module`
-
-4. **Upload the Code**:
-   - Connect ESP32 via USB
-   - Select the correct Port in `Tools` → `Port`
-   - Click Upload
-   - If upload fails, hold BOOT button on ESP32 during "Connecting..."
-
----
-
-## Wiring Diagram
-
-```
-                    ┌─────────────────┐
-                    │      ESP32      │
-                    │                 │
-    Water Flow ←────┤ D2          5V ├────→ LED 5V (all strips)
-    Water Data ←────┤ D4         GND ├────→ LED GND (all strips)
-    Elec Flow  ←────┤ D18            │
-    Elec Data  ←────┤ D5             │
-                    └─────────────────┘
-```
-
-**Important**: 
-- Connect to **DIN** (Data In) on LED strips, not DOUT
-- All GND wires must connect to ESP32 GND
-- For 30+ total LEDs, use external 5V power supply
-
----
-
-## Animation Sequence
-
-The system runs a continuous loop:
-
-| Act | LED Strip | Color | Direction | Meaning |
-|-----|-----------|-------|-----------|---------|
-| 1 | Water Flow | Sea Blue | Forward → | Water moving through meters |
-| 2 | Water Data | Orange | Backward ← | Data sent to logger |
-| 3 | Electricity Flow | Orange | Forward → | Current in main line |
-| 4 | Electricity Data | Orange | Backward ← | Measurements to logger |
-
-After Act 4, all LEDs turn off for 3 seconds, then the cycle repeats.
-
----
-
-## Troubleshooting
-
-| Issue | Solution |
-|-------|----------|
-| LEDs don't light up | Check 5V and GND connections |
-| Wrong colors | Change color order (BGR/RGB/GRB) in setup() |
-| Only some LEDs work | Verify LED count matches `NUM_xxx_LEDS` value |
-| Animation too fast/slow | Adjust `SPEED_MS_GLOBAL` value |
-| LEDs too dim/bright | Adjust `BRIGHTNESS_LEVEL` (0-255) |
-| Upload fails | Hold BOOT button during "Connecting..." |
-| Code won't compile | Ensure FastLED library is installed |
-
----
-
-## File Structure
-
-```
-Water-Electricity-Metering-Exhibit/
-├── led_visualization.ino    # Main Arduino sketch
-└── README.md                 # This file
-```
+1. Fork this repository
+2. Create a feature branch
+3. Add your changes
+4. Submit a pull request
 
 ---
 
@@ -230,10 +118,10 @@ This project is open source and available for educational and exhibition purpose
 
 ---
 
-## Contributing
+## Contact
 
-Contributions are welcome! Please submit issues or pull requests to improve this project.
+Part of the [Environmental Dashboard](https://github.com/Environmental-Dashboard) project.
 
 ---
 
-*Water and Electricity Metering System - LED Visualization*
+*Carbon Neutral Exhibition - Inspiring sustainable thinking through interactive displays*
