@@ -100,6 +100,13 @@ const int lavaOnlyEndHour = 6;     // End hour (6 = 6:00 AM)
 const char* apPassword = "exhibit123";  // <-- CHANGE THIS: Fallback AP password
 
 /* ---------------------------------------------------------------------------
+ * RETURN BUTTON CONFIGURATION
+ * The blue button at the bottom that links back to the main display
+ * ---------------------------------------------------------------------------*/
+const char* returnButtonText = "Return to Carbon Neutral Stories";
+const char* returnButtonURL = "https://oberlin.communityhub.cloud/digital-signage-v2-fe/remote/oc-carbon-neutral-display";
+
+/* ---------------------------------------------------------------------------
  * TIMEZONE CONFIGURATION
  * Current setting: Eastern Time (EST/EDT) with automatic DST switching
  * Format: "STD_OFFSET DST_OFFSET, START_RULE, END_RULE"
@@ -156,12 +163,11 @@ const char* htmlContent = "<!DOCTYPE HTML>"
                           "  const params = new URLSearchParams(window.location.search);"
                           "  const timeoutParam = parseInt(params.get('timeout'));"
                           "  const redirectURL = params.get('redirectURL');"
-                          "  if (redirectURL) {"
-                          "    const link = document.getElementById('returnLink');"
-                          "    if (link) { link.href = redirectURL; link.style.display = 'block'; }"
-                          "  }"
-                          "  if (!isNaN(timeoutParam) && timeoutParam > 0 && redirectURL) {"
-                          "    setTimeout(function(){ window.location.href = redirectURL; }, timeoutParam * 1000);"
+                          "  const link = document.getElementById('returnLink');"
+                          "  if (redirectURL && link) { link.href = redirectURL; }"
+                          "  const targetURL = redirectURL || link.href;"
+                          "  if (!isNaN(timeoutParam) && timeoutParam > 0) {"
+                          "    setTimeout(function(){ window.location.href = targetURL; }, timeoutParam * 1000);"
                           "  }"
                           "}"
                           "function updateRelayStates() {"
@@ -191,7 +197,7 @@ const char* htmlContent = "<!DOCTYPE HTML>"
                           "<button id=\"relay6\" class=\"button\" onclick=\"controlRelay(6)\">6. Mini-Fridge (Heat Pump)</button>"
                           "<button id=\"relay7\" class=\"button\" onclick=\"controlRelay(7)\">7. Show Meters & Data System</button>"
                           "<button id=\"relay8\" class=\"button\" onclick=\"controlRelay(8)\">8. Show Geothermal Model</button>"
-                          "<a id=\"returnLink\" class=\"button return\" href=\"#\" style=\"display:none;\">Return to Carbon Neutral Stories</a>"
+                          "<a id=\"returnLink\" class=\"button return\" href=\"https://oberlin.communityhub.cloud/digital-signage-v2-fe/remote/oc-carbon-neutral-display\">Return to Carbon Neutral Stories</a>"
                           "</body></html>";
 
 /* ---------------------------------------------------------------------------
