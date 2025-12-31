@@ -1,84 +1,171 @@
-# 🌊⚡ Carbon Neutral Exhibition - LED Visualization System
+# ESP32 LED Visualization for Water & Electricity Metering Exhibit
 
-A visual display that shows water and electricity flow using LED strips. Perfect for exhibitions demonstrating sustainability and energy monitoring concepts.
+A visual LED display system that demonstrates water and electricity flow in a museum/exhibit setting. Uses 4 LED strips with sequential animations to represent physical flow and data transmission.
 
----
+## Features
 
-## 📋 Table of Contents
-
-1. [What This Does](#what-this-does)
-2. [Hardware Requirements](#hardware-requirements)
-3. [Wiring Guide](#wiring-guide)
-4. [Software Setup](#software-setup)
-5. [Customization Guide](#customization-guide)
-6. [Troubleshooting](#troubleshooting)
-7. [Quick Reference](#quick-reference)
+- **4 Independent LED Strips**: Water Flow, Water Data, Electricity Flow, Electricity Data
+- **Sequential Animation**: Each strip performs like actors on a stage—one at a time
+- **Customizable Colors**: Sea blue for water, orange for electricity/data
+- **Adjustable Speed**: Control animation timing per strip or globally
+- **Beginner-Friendly Code**: Clearly marked sections for easy customization
 
 ---
 
-## 🎯 What This Does
+## Hardware Requirements
 
-This system controls **4 LED strips** that animate in sequence, like actors on a stage:
+| Component | Specification |
+|-----------|---------------|
+| Microcontroller | ESP32 Development Board |
+| LED Strips | WS2812B Addressable LED Strips (4 total) |
+| Power Supply | 5V 2A minimum (more for longer strips) |
+| Wiring | Jumper wires for GPIO connections |
 
-| Order | LED Strip | What It Represents | Color | Direction |
-|-------|-----------|-------------------|-------|-----------|
-| 1st | Water Flow | Physical water moving through meters | 🔵 Sea Blue | Forward → |
-| 2nd | Water Data | Data transmitted from water meters | 🟠 Orange | Backward ← |
-| 3rd | Electricity Flow | Electric current in the main line | 🟠 Orange | Forward → |
-| 4th | Electricity Data | Electrical measurements sent to logger | 🟠 Orange | Backward ← |
+### GPIO Pin Mapping
 
-**Animation Pattern:**
-1. A glowing dot travels across Strip 1 (4 times)
-2. Strip 1 turns off
-3. A glowing dot travels across Strip 2 (4 times)
-4. Strip 2 turns off
-5. ... and so on for Strips 3 and 4
-6. All strips go dark for 3 seconds
-7. The cycle repeats forever
+| LED Strip | Purpose | GPIO Pin | LED Count | Color Order |
+|-----------|---------|----------|-----------|-------------|
+| Water Flow | Physical water movement | GPIO 2 (D2) | 20 LEDs | BGR |
+| Water Data | Data from meters to logger | GPIO 4 (D4) | 5 LEDs | RGB |
+| Electricity Flow | Current in main line | GPIO 18 (D18) | 15 LEDs | GRB |
+| Electricity Data | Measurements to logger | GPIO 5 (D5) | 7 LEDs | RGB |
 
 ---
 
-## 🔧 Hardware Requirements
+## Configuration Guide
 
-### Components Needed
+### 1. LED Strip Lengths
 
-| Component | Quantity | Notes |
-|-----------|----------|-------|
-| ESP32 Development Board | 1 | Any ESP32 variant works |
-| WS2812B LED Strip | 4 pieces | Cut to required lengths |
-| 5V Power Supply | 1 | At least 2A recommended |
-| Jumper Wires | Several | For connections |
-| USB Cable | 1 | To program the ESP32 |
+If your strips have different LED counts, update these values:
 
-### LED Strip Specifications
-
-| Strip Name | Length | Color Order | Notes |
-|------------|--------|-------------|-------|
-| Water Flow | 20 LEDs | BGR | Check your strip's order |
-| Water Data | 5 LEDs | RGB | Check your strip's order |
-| Electricity Flow | 15 LEDs | GRB | Check your strip's order |
-| Electricity Data | 7 LEDs | RGB | Check your strip's order |
-
-> 💡 **What is "Color Order"?** LED strips receive color data in different sequences. If your LEDs show the wrong colors (e.g., blue instead of red), you may need to change the color order in the code.
-
----
-
-## 🔌 Wiring Guide
-
-### Pin Connections
-
-```
-ESP32 Pin    →    LED Strip
-─────────────────────────────
-GPIO 2 (D2)  →    Water Flow LEDs (Data In)
-GPIO 4 (D4)  →    Water Data LEDs (Data In)
-GPIO 18 (D18) →   Electricity Flow LEDs (Data In)
-GPIO 5 (D5)  →    Electricity Data LEDs (Data In)
-GND          →    All LED strips (GND)
-5V/VIN       →    All LED strips (5V)
+```cpp
+#define NUM_WATER_FLOW_LEDS   20    // Water Flow strip
+#define NUM_WATER_DATA_LEDS   5     // Water Data strip
+#define NUM_ELEC_FLOW_LEDS    15    // Electricity Flow strip
+#define NUM_ELEC_DATA_LEDS    7     // Electricity Data strip
 ```
 
-### Wiring Diagram
+---
+
+### 2. Colors
+
+Colors use RGB format: `CRGB(Red, Green, Blue)` where each value is 0-255.
+
+```cpp
+#define COLOR_SEA_BLUE   CRGB(0, 160, 200)    // Water Flow color
+#define COLOR_ORANGE     CRGB(255, 90, 0)     // All other strips
+```
+
+#### Common Color Values
+
+| Color | Code |
+|-------|------|
+| Red | `CRGB(255, 0, 0)` |
+| Green | `CRGB(0, 255, 0)` |
+| Blue | `CRGB(0, 0, 255)` |
+| Yellow | `CRGB(255, 255, 0)` |
+| Purple | `CRGB(255, 0, 255)` |
+| Cyan | `CRGB(0, 255, 255)` |
+| White | `CRGB(255, 255, 255)` |
+| Orange (less red) | `CRGB(255, 150, 0)` |
+
+---
+
+### 3. Animation Speed
+
+Speed is in milliseconds. Higher = slower animation.
+
+```cpp
+#define SPEED_MS_GLOBAL   350    // All strips use this speed
+```
+
+#### Speed Reference
+
+| Value | Description |
+|-------|-------------|
+| 100 | Fast |
+| 200 | Medium-fast |
+| 350 | Medium (default) |
+| 500 | Slow |
+| 1000 | Very slow (1 sec/LED) |
+
+#### Individual Strip Speeds
+
+```cpp
+#define DELAY_WATER_FLOW   300    // Faster water
+#define DELAY_WATER_DATA   400    // Slower data
+#define DELAY_ELEC_FLOW    300    // Faster electricity
+#define DELAY_ELEC_DATA    400    // Slower data
+```
+
+---
+
+### 4. Brightness
+
+```cpp
+#define BRIGHTNESS_LEVEL   150    // Range: 0-255
+```
+
+| Value | Description |
+|-------|-------------|
+| 50 | Dim (dark rooms) |
+| 100 | Medium |
+| 150 | Bright (default) |
+| 255 | Maximum |
+
+---
+
+### 5. Animation Behavior
+
+```cpp
+#define CYCLES_PER_STAGE        4       // Passes per strip before next
+#define PAUSE_BETWEEN_STAGES    500     // Pause between strips (ms)
+#define PAUSE_AFTER_FULL_CYCLE  3000    // Pause after all 4 complete (ms)
+```
+
+---
+
+### 6. Color Order Fix
+
+If colors appear wrong (e.g., blue instead of red), change the color order in `setup()`:
+
+```cpp
+FastLED.addLeds<WS2812B, PIN_WATER_FLOW, BGR>(waterFlowLeds, NUM_WATER_FLOW_LEDS);
+//                                       ^^^
+//                       Try: RGB, GRB, BGR, BRG, RBG, GBR
+```
+
+---
+
+## Installation
+
+### Arduino IDE Setup
+
+1. **Install ESP32 Board Support**:
+   - Go to `File` → `Preferences`
+   - Add to "Additional Board Manager URLs":
+     ```
+     https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+     ```
+   - Go to `Tools` → `Board` → `Boards Manager`
+   - Search "ESP32" and install "esp32 by Espressif Systems"
+
+2. **Install FastLED Library**:
+   - Go to `Sketch` → `Include Library` → `Manage Libraries`
+   - Search "FastLED" and install "FastLED by Daniel Garcia"
+
+3. **Select Board**:
+   - `Tools` → `Board` → `ESP32 Dev Module`
+
+4. **Upload the Code**:
+   - Connect ESP32 via USB
+   - Select the correct Port in `Tools` → `Port`
+   - Click Upload
+   - If upload fails, hold BOOT button on ESP32 during "Connecting..."
+
+---
+
+## Wiring Diagram
 
 ```
                     ┌─────────────────┐
@@ -91,272 +178,58 @@ GND          →    All LED strips (GND)
                     └─────────────────┘
 ```
 
-### Important Wiring Notes
-
-1. **Power**: LED strips can draw significant current. For more than 30 LEDs total, use an external 5V power supply instead of USB power.
-
-2. **Common Ground**: ALL LED strip GND wires must connect to the ESP32's GND.
-
-3. **Data Direction**: Connect to the "DIN" (Data In) end of each LED strip, not "DOUT".
+**Important**: 
+- Connect to **DIN** (Data In) on LED strips, not DOUT
+- All GND wires must connect to ESP32 GND
+- For 30+ total LEDs, use external 5V power supply
 
 ---
 
-## 💻 Software Setup
+## Animation Sequence
 
-### Step 1: Install Arduino IDE
+The system runs a continuous loop:
 
-1. Download Arduino IDE from: https://www.arduino.cc/en/software
-2. Install and open the application
+| Act | LED Strip | Color | Direction | Meaning |
+|-----|-----------|-------|-----------|---------|
+| 1 | Water Flow | Sea Blue | Forward → | Water moving through meters |
+| 2 | Water Data | Orange | Backward ← | Data sent to logger |
+| 3 | Electricity Flow | Orange | Forward → | Current in main line |
+| 4 | Electricity Data | Orange | Backward ← | Measurements to logger |
 
-### Step 2: Install ESP32 Board Support
-
-1. Open Arduino IDE
-2. Go to **File → Preferences**
-3. In "Additional Board Manager URLs", add:
-   ```
-   https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
-   ```
-4. Go to **Tools → Board → Boards Manager**
-5. Search for "ESP32" and install "esp32 by Espressif Systems"
-
-### Step 3: Install FastLED Library
-
-1. Go to **Sketch → Include Library → Manage Libraries**
-2. Search for "FastLED"
-3. Install "FastLED by Daniel Garcia"
-
-### Step 4: Upload the Code
-
-1. Open `led_visualization.ino` in Arduino IDE
-2. Connect your ESP32 via USB
-3. Select your board: **Tools → Board → ESP32 Dev Module**
-4. Select the correct port: **Tools → Port → (your ESP32's port)**
-5. Click the **Upload** button (→ arrow icon)
-6. Wait for "Done uploading" message
+After Act 4, all LEDs turn off for 3 seconds, then the cycle repeats.
 
 ---
 
-## 🎨 Customization Guide
+## Troubleshooting
 
-### Changing Colors
-
-Find the **SECTION 3: COLORS** in the code. Colors use the format `CRGB(Red, Green, Blue)` where each value is 0-255.
-
-```cpp
-// Examples:
-#define COLOR_SEA_BLUE   CRGB(0, 160, 200)    // Current blue
-#define COLOR_ORANGE     CRGB(255, 90, 0)     // Current orange
-
-// Try these alternatives:
-// CRGB(255, 0, 0)       = Pure Red
-// CRGB(0, 255, 0)       = Pure Green
-// CRGB(0, 0, 255)       = Pure Blue
-// CRGB(255, 255, 0)     = Yellow
-// CRGB(255, 0, 255)     = Purple
-// CRGB(0, 255, 255)     = Cyan
-// CRGB(255, 255, 255)   = White
-```
-
-**Making Orange Less Red:**
-```cpp
-// Original (reddish):
-#define COLOR_ORANGE     CRGB(255, 90, 0)
-
-// Less red (more true orange):
-#define COLOR_ORANGE     CRGB(255, 120, 0)
-
-// Even less red:
-#define COLOR_ORANGE     CRGB(255, 150, 0)
-```
-
----
-
-### Changing Speed
-
-Find **SECTION 5: ANIMATION SPEED** in the code.
-
-```cpp
-// Slower animation (higher number = slower):
-#define SPEED_MS_GLOBAL   500    // Half second per LED
-
-// Faster animation (lower number = faster):
-#define SPEED_MS_GLOBAL   200    // Fifth of a second per LED
-
-// Current setting:
-#define SPEED_MS_GLOBAL   350    // About third of a second
-```
-
-**Individual Strip Speeds:**
-```cpp
-// To make each strip move at different speeds:
-#define DELAY_WATER_FLOW   300    // Water flow: faster
-#define DELAY_WATER_DATA   400    // Water data: slower
-#define DELAY_ELEC_FLOW    300    // Elec flow: faster
-#define DELAY_ELEC_DATA    400    // Elec data: slower
-```
-
----
-
-### Changing Brightness
-
-Find **SECTION 4: BRIGHTNESS** in the code.
-
-```cpp
-#define BRIGHTNESS_LEVEL   150    // Current setting (0-255)
-
-// Dim for dark rooms:
-#define BRIGHTNESS_LEVEL   50
-
-// Very bright:
-#define BRIGHTNESS_LEVEL   200
-
-// Maximum (may be too harsh):
-#define BRIGHTNESS_LEVEL   255
-```
-
----
-
-### Changing LED Strip Lengths
-
-Find **SECTION 2: LED STRIP LENGTHS** in the code.
-
-```cpp
-// If your Water Flow strip has 30 LEDs instead of 20:
-#define NUM_WATER_FLOW_LEDS   30
-
-// Count the LEDs on each physical strip and update these numbers:
-#define NUM_WATER_FLOW_LEDS   20    // Change to match your strip
-#define NUM_WATER_DATA_LEDS   5     // Change to match your strip
-#define NUM_ELEC_FLOW_LEDS    15    // Change to match your strip
-#define NUM_ELEC_DATA_LEDS    7     // Change to match your strip
-```
-
----
-
-### Changing Animation Behavior
-
-Find **SECTION 6: ANIMATION BEHAVIOR** in the code.
-
-```cpp
-// How many times the dot travels across each strip:
-#define CYCLES_PER_STAGE        4    // Default: 4 passes
-// Try 2 for shorter performance, 6 for longer
-
-// Pause between each strip's performance:
-#define PAUSE_BETWEEN_STAGES    500  // Default: half second
-// Try 1000 for a full second pause
-
-// Pause after all 4 strips finish before restarting:
-#define PAUSE_AFTER_FULL_CYCLE  3000 // Default: 3 seconds
-// Try 5000 for 5 seconds of darkness
-```
-
----
-
-## 🔍 Troubleshooting
-
-### Problem: LEDs don't light up at all
-
-| Check | Solution |
+| Issue | Solution |
 |-------|----------|
-| Power | Ensure 5V and GND are connected |
-| Data wire | Make sure it's connected to DIN, not DOUT |
-| Pin numbers | Verify pins in code match your wiring |
-| Upload | Make sure code uploaded successfully |
+| LEDs don't light up | Check 5V and GND connections |
+| Wrong colors | Change color order (BGR/RGB/GRB) in setup() |
+| Only some LEDs work | Verify LED count matches `NUM_xxx_LEDS` value |
+| Animation too fast/slow | Adjust `SPEED_MS_GLOBAL` value |
+| LEDs too dim/bright | Adjust `BRIGHTNESS_LEVEL` (0-255) |
+| Upload fails | Hold BOOT button during "Connecting..." |
+| Code won't compile | Ensure FastLED library is installed |
 
-### Problem: Colors are wrong (e.g., blue shows as red)
+---
 
-This means the **color order** is incorrect for your LED strip. Find the `setup()` function and try different color orders:
+## File Structure
 
-```cpp
-// Original (BGR):
-FastLED.addLeds<WS2812B, PIN_WATER_FLOW, BGR>(waterFlowLeds, NUM_WATER_FLOW_LEDS);
-
-// Try RGB:
-FastLED.addLeds<WS2812B, PIN_WATER_FLOW, RGB>(waterFlowLeds, NUM_WATER_FLOW_LEDS);
-
-// Try GRB:
-FastLED.addLeds<WS2812B, PIN_WATER_FLOW, GRB>(waterFlowLeds, NUM_WATER_FLOW_LEDS);
+```
+Water-Electricity-Metering-Exhibit/
+├── led_visualization.ino    # Main Arduino sketch
+└── README.md                 # This file
 ```
 
-Common color orders: `RGB`, `GRB`, `BGR`, `BRG`, `RBG`, `GBR`
-
-### Problem: Only some LEDs work
-
-| Check | Solution |
-|-------|----------|
-| LED count | Make sure `NUM_xxx_LEDS` matches your actual strip length |
-| Power | Long strips may need more power |
-| Damaged LED | A broken LED can stop all LEDs after it |
-
-### Problem: Animation is too fast/slow
-
-Adjust `SPEED_MS_GLOBAL` in Section 5:
-- Higher number = slower animation
-- Lower number = faster animation
-
-### Problem: LEDs are too bright/dim
-
-Adjust `BRIGHTNESS_LEVEL` in Section 4 (0-255).
-
 ---
 
-## 📊 Quick Reference
-
-### Speed Settings (milliseconds per LED)
-
-| Value | Description |
-|-------|-------------|
-| 50 | Very fast (strobe-like) |
-| 100 | Fast |
-| 200 | Medium-fast |
-| 350 | Medium (default) |
-| 500 | Slow |
-| 750 | Very slow |
-| 1000 | Extremely slow (1 second per LED) |
-
-### Brightness Settings
-
-| Value | Description |
-|-------|-------------|
-| 25 | Very dim |
-| 50 | Dim |
-| 100 | Medium |
-| 150 | Bright (default) |
-| 200 | Very bright |
-| 255 | Maximum |
-
-### Common Colors
-
-| Color | Code |
-|-------|------|
-| Red | `CRGB(255, 0, 0)` |
-| Green | `CRGB(0, 255, 0)` |
-| Blue | `CRGB(0, 0, 255)` |
-| Yellow | `CRGB(255, 255, 0)` |
-| Cyan | `CRGB(0, 255, 255)` |
-| Purple | `CRGB(255, 0, 255)` |
-| White | `CRGB(255, 255, 255)` |
-| Orange | `CRGB(255, 90, 0)` |
-| Sea Blue | `CRGB(0, 160, 200)` |
-| Warm White | `CRGB(255, 200, 150)` |
-
----
-
-## 📝 License
+## License
 
 This project is open source and available for educational and exhibition purposes.
 
 ---
 
-## 🤝 Support
+## Contributing
 
-If you need help:
-1. Check the Troubleshooting section above
-2. Verify all wiring connections
-3. Make sure the FastLED library is installed
-4. Try uploading the unmodified code first
-
----
-
-*Created for the Carbon Neutral Exhibition*
+Contributions are welcome! Please submit issues or pull requests to improve this project.
