@@ -1,6 +1,6 @@
 /*
  * ╔═══════════════════════════════════════════════════════════════════════════╗
- * ║         CARBON NEUTRAL EXHIBITION - LED VISUALIZATION SYSTEM              ║
+ * ║              WATER AND ELECTRICITY METERING SYSTEM                        ║
  * ╠═══════════════════════════════════════════════════════════════════════════╣
  * ║  This code controls 4 LED strips that visualize water and electricity     ║
  * ║  flow in an exhibition. Each strip lights up one at a time, like actors   ║

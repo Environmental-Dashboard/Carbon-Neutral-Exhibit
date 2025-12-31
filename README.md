@@ -1,4 +1,4 @@
-# ESP32 LED Visualization for Water & Electricity Metering Exhibit
+# Water and Electricity Metering System
 
 A visual LED display system that demonstrates water and electricity flow in a museum/exhibit setting. Uses 4 LED strips with sequential animations to represent physical flow and data transmission.
 
@@ -233,3 +233,7 @@ This project is open source and available for educational and exhibition purpose
 ## Contributing
 
 Contributions are welcome! Please submit issues or pull requests to improve this project.
+
+---
+
+*Water and Electricity Metering System - LED Visualization*
