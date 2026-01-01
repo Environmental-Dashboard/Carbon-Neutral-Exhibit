@@ -8,6 +8,7 @@ A visual LED display system that demonstrates water and electricity flow in a mu
 - **Sequential Animation**: Each strip performs like actors on a stage—one at a time
 - **Customizable Colors**: Sea blue for water, orange for electricity/data
 - **Adjustable Speed**: Control animation timing per strip or globally
+- **OTA Updates**: Upload new code via WiFi after initial USB setup
 - **Beginner-Friendly Code**: Clearly marked sections for easy customization
 
 ---
@@ -197,6 +198,38 @@ The system runs a continuous loop:
 | 4 | Electricity Data | Orange | Backward ← | Measurements to logger |
 
 After Act 4, all LEDs turn off for 3 seconds, then the cycle repeats.
+
+---
+
+## OTA (Wireless) Updates
+
+After the initial USB upload, you can update this code wirelessly via WiFi!
+
+### OTA Configuration
+
+| Setting | Value |
+|---------|-------|
+| Hostname | `esp32-led` |
+| Password | `132ElmStreet` |
+| WiFi | `ObieConnect` |
+
+### How to Upload via OTA
+
+1. Make sure ESP32 is powered on and connected to WiFi
+2. In Arduino IDE, go to **Tools → Port**
+3. Look for: `esp32-led at [IP address]`
+4. Select it
+5. Click **Upload**
+6. Enter password when prompted: `132ElmStreet`
+
+### OTA Settings in Code
+
+```cpp
+const char* wifiSSID = "ObieConnect";        // WiFi network
+const char* wifiPassword = "122ElmStreet";   // WiFi password
+const char* otaHostname = "esp32-led";       // Name in Arduino IDE
+const char* otaPassword = "132ElmStreet";    // OTA upload password
+```
 
 ---
 
