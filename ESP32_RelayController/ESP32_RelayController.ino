@@ -82,7 +82,7 @@ unsigned long onDurations[] = {
   7000,    // [4] Relay 5: Hair Dryer - 7 seconds
   30000,   // [5] Relay 6: Mini-Fridge - 30 seconds
   50000,   // [6] Relay 7: Meters & Data - 50 seconds
-  86000    // [7] Relay 8: Geothermal - 86 seconds (1 min 26 sec)
+  70000    // [7] Relay 8: Geothermal - 70 seconds (1 min 10 sec)
 };
 
 /* ---------------------------------------------------------------------------
