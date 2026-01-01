@@ -8,7 +8,6 @@ A visual LED display system that demonstrates water and electricity flow in a mu
 - **Sequential Animation**: Each strip performs like actors on a stage—one at a time
 - **Customizable Colors**: Sea blue for water, orange for electricity/data
 - **Adjustable Speed**: Control animation timing per strip or globally
-- **OTA Updates**: Upload new code via WiFi after initial USB setup
 - **Beginner-Friendly Code**: Clearly marked sections for easy customization
 
 ---

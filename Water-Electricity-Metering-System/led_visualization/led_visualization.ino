@@ -27,6 +27,7 @@
  */
 
 #include <FastLED.h>
+<<<<<<< HEAD
 #include <WiFi.h>
 #include <ArduinoOTA.h>
 
@@ -43,6 +44,8 @@ const char* wifiSSID = "ObieConnect";        // <-- Your WiFi network name
 const char* wifiPassword = "122ElmStreet";   // <-- Your WiFi password
 const char* otaHostname = "esp32-water&electricity_metering";       // <-- Name shown in Arduino IDE
 const char* otaPassword = "132ElmStreet";    // <-- Password for OTA uploads
+=======
+>>>>>>> f3ffe85 (Remove all OTA functionality)
 
 /* ═══════════════════════════════════════════════════════════════════════════
  *                    SECTION 1: HARDWARE WIRING (PINS)
@@ -251,7 +254,6 @@ void oneDotPass(CRGB* leds, int numLeds, CRGB color, bool reverse, int delayMs) 
       leds[pos] = color;           // Light up current position
       FastLED.show();              // Send to hardware
       delay(delayMs);              // Wait before moving to next
-      ArduinoOTA.handle();         // Check for OTA updates
     }
   } else {
     // Reverse direction: Last LED → ... → LED 2 → LED 1 → LED 0
@@ -260,7 +262,6 @@ void oneDotPass(CRGB* leds, int numLeds, CRGB color, bool reverse, int delayMs) 
       leds[pos] = color;
       FastLED.show();
       delay(delayMs);
-      ArduinoOTA.handle();         // Check for OTA updates
     }
   }
 }
@@ -312,24 +313,6 @@ void setup() {
 
   // Start with all LEDs off
   clearAllLeds();
-  
-  // Connect to WiFi for OTA updates
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(wifiSSID, wifiPassword);
-  
-  // Wait for connection (10 second timeout - don't block animations too long)
-  int attempts = 0;
-  while (WiFi.status() != WL_CONNECTED && attempts < 20) {
-    delay(500);
-    attempts++;
-  }
-  
-  // Initialize OTA if WiFi connected
-  if (WiFi.status() == WL_CONNECTED) {
-    ArduinoOTA.setHostname(otaHostname);
-    ArduinoOTA.setPassword(otaPassword);
-    ArduinoOTA.begin();
-  }
 }
 
 /*

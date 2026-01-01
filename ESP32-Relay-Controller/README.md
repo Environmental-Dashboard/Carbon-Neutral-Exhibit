@@ -14,8 +14,7 @@ This device controls 8 electrical appliances in a museum exhibit. A separate ele
 4. [All Configurable Parameters](#all-configurable-parameters)
 5. [Hardware Setup](#hardware-setup)
 6. [Software Installation](#software-installation)
-7. [OTA (Wireless) Updates](#ota-wireless-updates)
-8. [Troubleshooting](#troubleshooting)
+7. [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -389,17 +388,6 @@ If WiFi fails, ESP32 creates its own network:
 ```cpp
 const char* apPassword = "exhibit123";
 // Network name: ExhibitControls-XXXX (auto-generated)
-```
-
----
-
-### OTA Settings
-
-For wireless code uploads:
-
-```cpp
-const char* otaHostname = "esp32-relay";     // Name in Arduino IDE port menu
-const char* otaPassword = "132ElmStreet";    // Password for OTA uploads
 ```
 
 ---

@@ -21,7 +21,6 @@
 #include <WebServer.h>
 #include <SPIFFS.h>
 #include <ESPmDNS.h>
-#include <ArduinoOTA.h>
 #include <time.h>
 
 /* ---------------------------------------------------------------------------
@@ -106,13 +105,6 @@ const char* apPassword = "exhibit123";  // <-- CHANGE THIS: Fallback AP password
  * ---------------------------------------------------------------------------*/
 const char* returnButtonText = "Return to Carbon Neutral Stories";
 const char* returnButtonURL = "https://oberlin.communityhub.cloud/digital-signage-v2-fe/remote/oc-carbon-neutral-display";
-
-/* ---------------------------------------------------------------------------
- * OTA (OVER-THE-AIR) UPDATE CONFIGURATION
- * Allows uploading new code via WiFi instead of USB
- * ---------------------------------------------------------------------------*/
-const char* otaHostname = "esp32-relay";     // Name shown in Arduino IDE port menu
-const char* otaPassword = "132ElmStreet";    // Password required for OTA upload
 
 /* ---------------------------------------------------------------------------
  * TIMEZONE CONFIGURATION
@@ -363,11 +355,7 @@ void setup() {
   server.begin();
   Serial.println("HTTP server started");
   
-  // Initialize OTA (Over-The-Air) updates
-  ArduinoOTA.setHostname(otaHostname);
-  ArduinoOTA.setPassword(otaPassword);
-  ArduinoOTA.begin();
-}
+  }
 
 /* ---------------------------------------------------------------------------
  * loop()
@@ -380,7 +368,6 @@ void setup() {
  * ---------------------------------------------------------------------------*/
 void loop() {
   server.handleClient();
-  ArduinoOTA.handle();  // Handle OTA updates
 
   // NIGHT MODE: Only run Lava Lamp during configured hours
   if (isLavaLampOnlyTime()) {

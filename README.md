@@ -22,8 +22,7 @@ This repository contains multiple sub-projects, each controlling a different par
 | Folder | Description | Status |
 |--------|-------------|--------|
 | [Water-Electricity-Metering-System](./Water-Electricity-Metering-System/) | LED visualization showing water and electricity flow with 4 animated LED strips | ✅ Complete |
-| [ESP32-Relay-Controller](./ESP32-Relay-Controller/) | Web-based relay controller for 8 exhibit devices with auto-cycle, night mode, and OTA updates | ✅ Complete |
-| [ESP32-OTA-Setup](./ESP32-OTA-Setup/) | Over-The-Air update setup - upload code via WiFi after initial USB setup | ✅ Complete |
+| [ESP32-Relay-Controller](./ESP32-Relay-Controller/) | Web-based relay controller for 8 exhibit devices with auto-cycle and night mode | ✅ Complete |
 
 ---
 
@@ -35,16 +34,13 @@ CARBON-NEUTRAL-EXHIBITION/
 ├── README.md                              ← You are here
 │
 ├── Water-Electricity-Metering-System/     ← LED flow visualization
-│   ├── led_visualization.ino
+│   ├── led_visualization/
+│   │   └── led_visualization.ino
 │   └── README.md
 │
 ├── ESP32-Relay-Controller/                ← 8-channel relay controller
 │   ├── ESP32_RelayController.ino
 │   ├── ElectricityButton.gif
-│   └── README.md
-│
-├── ESP32-OTA-Setup/                       ← WiFi code upload setup
-│   ├── ESP32_OTA_Setup.ino
 │   └── README.md
 │
 └── [Future Components]/                   ← More exhibits to be added
@@ -99,23 +95,6 @@ Controls 8 relay channels for exhibit devices with a web interface:
 - 5V power supply
 
 👉 See [ESP32-Relay-Controller/README.md](./ESP32-Relay-Controller/README.md) for detailed setup instructions.
-
-### ESP32-OTA-Setup
-
-Enables wireless code uploads to all ESP32s after initial USB setup:
-
-**Benefits:**
-- Upload code via WiFi - no USB cable needed
-- Update multiple ESP32s without physical access
-- Faster development and testing
-
-**How to use:**
-1. Upload `ESP32_OTA_Setup.ino` via USB (first time only)
-2. ESP32 connects to WiFi and enables OTA
-3. In Arduino IDE: Tools → Port → select the network address
-4. Upload any sketch wirelessly!
-
-👉 See [ESP32-OTA-Setup/README.md](./ESP32-OTA-Setup/README.md) for detailed setup instructions.
 
 ---
 
