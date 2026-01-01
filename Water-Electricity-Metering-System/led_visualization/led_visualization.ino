@@ -41,7 +41,7 @@
 
 const char* wifiSSID = "ObieConnect";        // <-- Your WiFi network name
 const char* wifiPassword = "122ElmStreet";   // <-- Your WiFi password
-const char* otaHostname = "esp32-led";       // <-- Name shown in Arduino IDE
+const char* otaHostname = "esp32-water&electricity_metering";       // <-- Name shown in Arduino IDE
 const char* otaPassword = "132ElmStreet";    // <-- Password for OTA uploads
 
 /* ═══════════════════════════════════════════════════════════════════════════
