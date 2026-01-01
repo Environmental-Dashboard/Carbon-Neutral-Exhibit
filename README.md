@@ -12,6 +12,7 @@ The Carbon Neutral Exhibition is an educational display that helps visitors unde
 - **Electricity Consumption**: How electrical current flows and how usage is tracked
 - **Data Transmission**: How meter readings are sent to data loggers for monitoring
 - **Energy Efficiency**: Comparing different technologies and their environmental impact
+- **Geothermal Energy**: How heat is transferred from underground for heating/cooling
 
 ---
 
@@ -21,8 +22,9 @@ This repository contains multiple sub-projects, each controlling a different par
 
 | Folder | Description | Status |
 |--------|-------------|--------|
-| [Water-Electricity-Metering-System](./Water-Electricity-Metering-System/) | LED visualization showing water and electricity flow with 4 animated LED strips | ✅ Complete |
-| [ESP32-Relay-Controller](./ESP32-Relay-Controller/) | Web-based relay controller for 8 exhibit devices with auto-cycle and night mode | ✅ Complete |
+| [Water-Electricity-Metering-System](./Water-Electricity-Metering-System/) | LED visualization showing water and electricity flow with animated LED strips | ✅ Complete |
+| [ESP32_RelayController](./ESP32_RelayController/) | Web-based relay controller for 8 exhibit devices with auto-cycle and night mode | ✅ Complete |
+| [Geothermal_System](./Geothermal_System/) | LED visualization showing geothermal heat flow with color gradient animation | ✅ Complete |
 
 ---
 
@@ -34,13 +36,16 @@ CARBON-NEUTRAL-EXHIBITION/
 ├── README.md                              ← You are here
 │
 ├── Water-Electricity-Metering-System/     ← LED flow visualization
-│   ├── led_visualization/
-│   │   └── led_visualization.ino
+│   ├── Water-Electricity-Metering-System.ino
 │   └── README.md
 │
-├── ESP32-Relay-Controller/                ← 8-channel relay controller
+├── ESP32_RelayController/                 ← 8-channel relay controller
 │   ├── ESP32_RelayController.ino
 │   ├── ElectricityButton.gif
+│   └── README.md
+│
+├── Geothermal_System/                     ← Geothermal heat flow visualization
+│   ├── Geothermal_system.ino
 │   └── README.md
 │
 └── [Future Components]/                   ← More exhibits to be added
@@ -52,7 +57,7 @@ CARBON-NEUTRAL-EXHIBITION/
 
 ### Water-Electricity-Metering-System
 
-Controls 4 LED strips that animate in sequence to show:
+Controls LED strips that animate in sequence to show:
 
 | LED Strip | Purpose | Color |
 |-----------|---------|-------|
@@ -63,12 +68,14 @@ Controls 4 LED strips that animate in sequence to show:
 
 **Hardware Required:**
 - ESP32 microcontroller
-- WS2812B LED strips (4 total)
+- WS2812B LED strips
 - 5V power supply
 
 👉 See [Water-Electricity-Metering-System/README.md](./Water-Electricity-Metering-System/README.md) for detailed setup instructions.
 
-### ESP32-Relay-Controller
+---
+
+### ESP32_RelayController
 
 Controls 8 relay channels for exhibit devices with a web interface:
 
@@ -94,7 +101,33 @@ Controls 8 relay channels for exhibit devices with a web interface:
 - 8-channel relay module
 - 5V power supply
 
-👉 See [ESP32-Relay-Controller/README.md](./ESP32-Relay-Controller/README.md) for detailed setup instructions.
+👉 See [ESP32_RelayController/README.md](./ESP32_RelayController/README.md) for detailed setup instructions.
+
+---
+
+### Geothermal_System
+
+Visualizes how a geothermal heat pump works with automatic summer/winter mode switching:
+
+| Mode | Animation | What It Shows |
+|------|-----------|---------------|
+| ☀️ Summer | RED → BLUE | Heat extracted from building, dumped to ground |
+| ❄️ Winter | BLUE → RED | Heat extracted from ground, pumped to building |
+
+**Features:**
+- Automatic alternation between summer and winter modes (4 cycles each)
+- Single "globule" animation with distance-based color changes
+- Indicator LED outputs for summer/winter mode display
+- Fully documented code for easy customization
+- 10 configurable color segments with adjustable distances
+
+**Hardware Required:**
+- ESP32 microcontroller
+- WS2812B LED strip (44 LEDs)
+- 5V power supply
+- 2x indicator LEDs (GPIO 4 & 5)
+
+👉 See [Geothermal_System/README.md](./Geothermal_System/README.md) for detailed setup instructions.
 
 ---
 
@@ -110,12 +143,12 @@ Controls 8 relay channels for exhibit devices with a web interface:
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/Environmental-Dashboard/CARBON-NEUTRAL-EXHIBITION.git
+   git clone https://github.com/Environmental-Dashboard/Carbon-Neutral-Exhibit.git
    ```
 
 2. Navigate to the component you want to set up:
    ```bash
-   cd CARBON-NEUTRAL-EXHIBITION/Water-Electricity-Metering-System
+   cd Carbon-Neutral-Exhibit/Geothermal_System
    ```
 
 3. Open the `.ino` file in Arduino IDE
