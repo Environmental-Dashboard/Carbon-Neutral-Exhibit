@@ -21,7 +21,6 @@
 #include <WebServer.h>
 #include <SPIFFS.h>
 #include <ESPmDNS.h>
-#include <ArduinoOTA.h>
 #include <time.h>
 
 /* ---------------------------------------------------------------------------
@@ -106,13 +105,6 @@ const char* apPassword = "exhibit123";  // <-- CHANGE THIS: Fallback AP password
  * ---------------------------------------------------------------------------*/
 const char* returnButtonText = "Return to Carbon Neutral Stories";
 const char* returnButtonURL = "https://oberlin.communityhub.cloud/digital-signage-v2-fe/remote/oc-carbon-neutral-display";
-
-/* ---------------------------------------------------------------------------
- * OTA (OVER-THE-AIR) UPDATE CONFIGURATION
- * Allows uploading new code via WiFi instead of USB
- * This name appears in Arduino IDE under Tools → Port
- * ---------------------------------------------------------------------------*/
-const char* otaHostname = "esp32-relay";  // <-- Change to identify this device
 
 /* ---------------------------------------------------------------------------
  * TIMEZONE CONFIGURATION
@@ -362,25 +354,6 @@ void setup() {
 
   server.begin();
   Serial.println("HTTP server started");
-  
-  // Initialize OTA (Over-The-Air) updates
-  ArduinoOTA.setHostname(otaHostname);
-  ArduinoOTA.setPassword("132ElmStreet");  // OTA password for security
-  ArduinoOTA.onStart([]() { Serial.println("OTA Update Starting..."); });
-  ArduinoOTA.onEnd([]() { Serial.println("\nOTA Update Complete!"); });
-  ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
-    Serial.printf("OTA Progress: %u%%\r", (progress / (total / 100)));
-  });
-  ArduinoOTA.onError([](ota_error_t error) { Serial.printf("OTA Error[%u]\n", error); });
-  ArduinoOTA.begin();
-  
-  Serial.println("============================================");
-  Serial.println("OTA ENABLED - Upload via WiFi:");
-  Serial.print("  Hostname: ");
-  Serial.println(otaHostname);
-  Serial.print("  IP: ");
-  Serial.println(WiFi.localIP());
-  Serial.println("============================================");
 }
 
 /* ---------------------------------------------------------------------------
@@ -394,7 +367,6 @@ void setup() {
  * ---------------------------------------------------------------------------*/
 void loop() {
   server.handleClient();
-  ArduinoOTA.handle();  // Handle OTA updates
 
   // NIGHT MODE: Only run Lava Lamp during configured hours
   if (isLavaLampOnlyTime()) {
