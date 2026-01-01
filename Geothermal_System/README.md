@@ -35,30 +35,86 @@ The system automatically alternates between **4 summer cycles** and **4 winter c
 | Component | Specification | Notes |
 |-----------|---------------|-------|
 | Microcontroller | ESP32 Dev Module | Any ESP32 variant works |
-| LED Strip | WS2812B (44 LEDs) | Addressable RGB LEDs |
-| Power Supply | 5V, 3A minimum | Calculate ~60mA per LED |
-| Summer Indicator | LED on GPIO 4 | Shows when in summer mode |
-| Winter Indicator | LED on GPIO 5 | Shows when in winter mode |
+| LED Strip | WS2812B (44 LEDs) | 24V addressable RGB LEDs |
+| Power Supply | 24V DC | Main power for LED strip |
+| Step-Down Converter | 24V → 5V DC-DC | Powers ESP32 and relay module |
+| Relay Module | 2-channel, 5V | Controls summer/winter signs |
+| Summer Sign | Via relay on GPIO 4 | Illuminated sign for summer mode |
+| Winter Sign | Via relay on GPIO 5 | Illuminated sign for winter mode |
 
 ### Wiring Diagram
 
 ```
-ESP32                          LED Strip
-┌────────────────┐             ┌─────────────────┐
-│  GPIO 2 (D2)   │─────────────│ DIN (Data In)   │
-│  GPIO 4 (D4)   │──── LED ────│ Summer indicator│
-│  GPIO 5 (D5)   │──── LED ────│ Winter indicator│
-│  GND           │──────┬──────│ GND             │
-└────────────────┘      │      └─────────────────┘
-                        │
-                   5V Power Supply
-                   ┌──────────┐
-                   │ GND  ────┤
-                   │ 5V   ────┼───── LED Strip 5V
-                   └──────────┘
+                         24V POWER SUPPLY
+                         ┌─────────────────┐
+                         │  24V (+)  ──────┼───────────────────┐
+                         │  GND (-)  ──────┼─────────┬─────────┼──── Common GND
+                         └─────────────────┘         │         │
+                                                     │         │
+                         STEP-DOWN CONVERTER         │         │
+                         (24V → 5V)                  │         │
+                         ┌─────────────────┐         │         │
+              24V ───────│ IN+      OUT+ ──┼─────────┼─────────┼──── 5V Rail
+              GND ───────│ IN-      OUT- ──┼─────────┤         │
+                         └─────────────────┘         │         │
+                                                     │         │
+                                                     │         │
+   ESP32                                             │         │
+   ┌───────────────────┐                             │         │
+   │  5V  ─────────────┼─────────────────────────────┤         │
+   │  GND ─────────────┼─────────────────────────────┴─────────┤
+   │  GPIO 2 (D2) ─────┼───────────────────────────────────────┼──── LED Strip DIN
+   │  GPIO 4 (D4) ─────┼──── Relay IN1 (Summer)                │
+   │  GPIO 5 (D5) ─────┼──── Relay IN2 (Winter)                │
+   └───────────────────┘                                       │
+                                                               │
+                                                               │
+   LED STRIP (24V)                                             │
+   ┌───────────────────┐                                       │
+   │  24V ─────────────┼───────────────────────────────────────┘
+   │  GND ─────────────┼──── Common GND
+   │  DIN ─────────────┼──── GPIO 2
+   └───────────────────┘
+
+
+   2-CHANNEL RELAY MODULE
+   ┌──────────────────────────────────────────────────────────────┐
+   │                                                              │
+   │  VCC ──────────── 5V (from step-down converter)              │
+   │  GND ──────────── Common GND                                 │
+   │  IN1 ──────────── GPIO 4 (Summer control signal)             │
+   │  IN2 ──────────── GPIO 5 (Winter control signal)             │
+   │                                                              │
+   │  Relay 1 (Summer Sign):                                      │
+   │    COM1 ─────────── Sign Power Source (+)                    │
+   │    NO1  ─────────── Summer Sign (+)                          │
+   │    (Sign GND connects to power source GND)                   │
+   │                                                              │
+   │  Relay 2 (Winter Sign):                                      │
+   │    COM2 ─────────── Sign Power Source (+)                    │
+   │    NO2  ─────────── Winter Sign (+)                          │
+   │    (Sign GND connects to power source GND)                   │
+   │                                                              │
+   └──────────────────────────────────────────────────────────────┘
 ```
 
-⚠️ **Important:** Use an external 5V power supply for the LED strip. Don't power more than a few LEDs from the ESP32's 5V pin.
+### Power Flow Summary
+
+```
+24V Supply ──┬──► LED Strip (24V input)
+             │
+             └──► Step-Down Converter (24V → 5V) ──┬──► ESP32 (5V)
+                                                   │
+                                                   └──► Relay Module VCC (5V)
+
+All GND connections are shared (common ground)
+```
+
+⚠️ **Important Notes:**
+- The LED strip runs on **24V** - do NOT connect 5V to it
+- ESP32 and relay module run on **5V** from the step-down converter
+- All ground connections must be tied together (common ground)
+- The relay module switches the signs ON/OFF based on ESP32 GPIO signals
 
 ---
 
