@@ -22,7 +22,7 @@ This repository contains multiple sub-projects, each controlling a different par
 | Folder | Description | Status |
 |--------|-------------|--------|
 | [Water-Electricity-Metering-System](./Water-Electricity-Metering-System/) | LED visualization showing water and electricity flow with 4 animated LED strips | ✅ Complete |
-| [ESP32-Relay-Controller](./ESP32-Relay-Controller/) | Web-based relay controller for 8 exhibit devices with auto-cycle and night mode | ✅ Complete |
+| [ESP32-Relay-Controller](./ESP32-Relay-Controller/) | Web-based relay controller for 8 exhibit devices with auto-cycle, night mode, and OTA updates | ✅ Complete |
 | [ESP32-OTA-Setup](./ESP32-OTA-Setup/) | Over-The-Air update setup - upload code via WiFi after initial USB setup | ✅ Complete |
 
 ---
