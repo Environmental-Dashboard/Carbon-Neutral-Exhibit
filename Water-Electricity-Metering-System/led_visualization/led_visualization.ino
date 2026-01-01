@@ -27,25 +27,6 @@
  */
 
 #include <FastLED.h>
-<<<<<<< HEAD
-#include <WiFi.h>
-#include <ArduinoOTA.h>
-
-/* ═══════════════════════════════════════════════════════════════════════════
- *                    SECTION 0: WIFI & OTA CONFIGURATION  ← CHANGE THIS
- * ═══════════════════════════════════════════════════════════════════════════
- * 
- *  WiFi credentials for OTA (Over-The-Air) updates.
- *  After initial USB upload, you can update this code via WiFi!
- *  In Arduino IDE: Tools → Port → select "esp32-led at [IP address]"
- */
-
-const char* wifiSSID = "ObieConnect";        // <-- Your WiFi network name
-const char* wifiPassword = "122ElmStreet";   // <-- Your WiFi password
-const char* otaHostname = "esp32-water&electricity_metering";       // <-- Name shown in Arduino IDE
-const char* otaPassword = "132ElmStreet";    // <-- Password for OTA uploads
-=======
->>>>>>> f3ffe85 (Remove all OTA functionality)
 
 /* ═══════════════════════════════════════════════════════════════════════════
  *                    SECTION 1: HARDWARE WIRING (PINS)
@@ -114,10 +95,21 @@ const char* otaPassword = "132ElmStreet";    // <-- Password for OTA uploads
 // Current: R=0, G=160, B=200
 #define COLOR_SEA_BLUE   CRGB(0, 160, 200)
 
-// Orange color for all data/electricity LEDs
-// Current: R=255, G=90, B=0
-// If this looks too RED, try increasing 90 to 120 or 150
-#define COLOR_ORANGE     CRGB(255, 90, 0)
+/* ─────────────────────────────────────────────────────────────────────────
+ *  ORANGE COLORS - Each strip may show orange differently due to LED type
+ *  Adjust each independently to get consistent orange across all strips
+ * ─────────────────────────────────────────────────────────────────────────*/
+
+// Water Data LEDs - This one looks good as-is
+#define COLOR_ORANGE_WATER_DATA   CRGB(255, 90, 0)
+
+// Electricity Flow LEDs - Slightly reddish, so we add more green
+// If still too red, increase 120 to 140 or 160
+#define COLOR_ORANGE_ELEC_FLOW    CRGB(255, 100, 0)
+
+// Electricity Data LEDs - More reddish, so we add even more green
+// If still too red, increase 150 to 170 or 180
+#define COLOR_ORANGE_ELEC_DATA    CRGB(255, 180, 0)
 
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -139,7 +131,7 @@ const char* otaPassword = "132ElmStreet";    // <-- Password for OTA uploads
  *  WARNING: Higher brightness = more power consumption
  */
 
-#define BRIGHTNESS_LEVEL   150
+#define BRIGHTNESS_LEVEL   255
 
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -164,15 +156,14 @@ const char* otaPassword = "132ElmStreet";    // <-- Password for OTA uploads
  *  OPTION B: Set DIFFERENT speeds for each strip (advanced)
  */
 
-// ─── OPTION A: GLOBAL SPEED (affects all strips equally) ───
-#define SPEED_MS_GLOBAL   350    // All strips move at this speed
+
 
 // ─── OPTION B: INDIVIDUAL SPEEDS (uncomment to customize each strip) ───
 // To use individual speeds, replace SPEED_MS_GLOBAL below with your own numbers
-#define DELAY_WATER_FLOW   SPEED_MS_GLOBAL   // Try: 300 for faster water
-#define DELAY_WATER_DATA   SPEED_MS_GLOBAL   // Try: 400 for slower data
-#define DELAY_ELEC_FLOW    SPEED_MS_GLOBAL   // Try: 250 for fast electricity
-#define DELAY_ELEC_DATA    SPEED_MS_GLOBAL   // Try: 400 for slower data
+#define DELAY_WATER_FLOW   200   // Try: 300 for faster water
+#define DELAY_WATER_DATA   350   // Try: 400 for slower data
+#define DELAY_ELEC_FLOW    200   // Try: 250 for fast electricity
+#define DELAY_ELEC_DATA    350   // Try: 400 for slower data
 
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -196,8 +187,8 @@ const char* otaPassword = "132ElmStreet";    // <-- Password for OTA uploads
  */
 
 #define CYCLES_PER_STAGE        4       // Number of passes per strip
-#define PAUSE_BETWEEN_STAGES    500     // Pause between strips (ms)
-#define PAUSE_AFTER_FULL_CYCLE  3000    // Pause after all 4 strips done (ms)
+#define PAUSE_BETWEEN_STAGES   0     // Pause between strips (ms)
+#define PAUSE_AFTER_FULL_CYCLE  7000    // Pause after all 4 strips done (ms)
 
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -329,9 +320,6 @@ void setup() {
  *   Then all lights go dark for a few seconds, and it repeats.
  */
 void loop() {
-  // Handle OTA updates
-  ArduinoOTA.handle();
-  
   // ═══ ACT 1: WATER FLOW ═══
   // Sea blue dot moves forward (left to right)
   // Represents physical water flowing through the meters
@@ -340,17 +328,17 @@ void loop() {
   // ═══ ACT 2: WATER DATA ═══
   // Orange dot moves backward (right to left)
   // Represents data being sent from water meters to the logger
-  runStage(waterDataLeds, NUM_WATER_DATA_LEDS, COLOR_ORANGE, true, DELAY_WATER_DATA);
+  runStage(waterDataLeds, NUM_WATER_DATA_LEDS, COLOR_ORANGE_WATER_DATA, true, DELAY_WATER_DATA);
 
   // ═══ ACT 3: ELECTRICITY FLOW ═══
   // Orange dot moves forward (left to right)
   // Represents electric current flowing in the main line
-  runStage(elecFlowLeds, NUM_ELEC_FLOW_LEDS, COLOR_ORANGE, false, DELAY_ELEC_FLOW);
+  runStage(elecFlowLeds, NUM_ELEC_FLOW_LEDS, COLOR_ORANGE_ELEC_FLOW, false, DELAY_ELEC_FLOW);
 
   // ═══ ACT 4: ELECTRICITY DATA ═══
   // Orange dot moves backward (right to left)
   // Represents electrical measurement data sent to the logger
-  runStage(elecDataLeds, NUM_ELEC_DATA_LEDS, COLOR_ORANGE, true, DELAY_ELEC_DATA);
+  runStage(elecDataLeds, NUM_ELEC_DATA_LEDS, COLOR_ORANGE_ELEC_DATA, true, DELAY_ELEC_DATA);
 
   // ═══ INTERMISSION ═══
   // All lights go off, pause, then the show starts again

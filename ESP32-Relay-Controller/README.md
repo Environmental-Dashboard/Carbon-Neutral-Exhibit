@@ -466,9 +466,9 @@ const int relayPins[] = {4, 5, 18, 19, 21, 22, 23, 25};
 1. Open Arduino IDE
 2. Go to **File → Preferences**
 3. In "Additional Board Manager URLs" add:
-   ```
-   https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
-   ```
+     ```
+     https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+     ```
 4. Click OK
 5. Go to **Tools → Board → Boards Manager**
 6. Search for "ESP32"
@@ -501,45 +501,6 @@ const int relayPins[] = {4, 5, 18, 19, 21, 22, 23, 25};
    Connected! IP address: 192.168.1.100
    ```
 5. Open that address in a web browser
-
----
-
-## OTA (Wireless) Updates
-
-After the initial USB upload, you can update this code wirelessly via WiFi!
-
-### OTA Configuration
-
-| Setting | Value |
-|---------|-------|
-| Hostname | `esp32-relay` |
-| Password | `132ElmStreet` |
-
-### How to Upload via OTA
-
-1. Make sure ESP32 is powered on and connected to WiFi
-2. In Arduino IDE, go to **Tools → Port**
-3. Look for: `esp32-relay at [IP address]`
-4. Select it
-5. Click **Upload**
-6. Enter password when prompted: `132ElmStreet`
-
-### OTA Notes
-
-- **First upload must be via USB** - OTA only works after initial setup
-- **Same WiFi network required** - Computer and ESP32 must be on same network
-- **No Serial Monitor** - Serial output only works over USB, not OTA
-- **Password protected** - Prevents unauthorized uploads
-- **OTA stays enabled** - After uploading, OTA remains active for future updates
-
-### If OTA Doesn't Work
-
-| Problem | Solution |
-|---------|----------|
-| Port not showing | Make sure computer is on same WiFi network |
-| Connection refused | Enterprise networks may block device-to-device traffic |
-| Password rejected | Use: `132ElmStreet` |
-| Upload timeout | Reset ESP32 and try again |
 
 ---
 

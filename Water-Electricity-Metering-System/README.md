@@ -52,9 +52,27 @@ If your strips have different LED counts, update these values:
 Colors use RGB format: `CRGB(Red, Green, Blue)` where each value is 0-255.
 
 ```cpp
-#define COLOR_SEA_BLUE   CRGB(0, 160, 200)    // Water Flow color
-#define COLOR_ORANGE     CRGB(255, 90, 0)     // All other strips
+#define COLOR_SEA_BLUE   CRGB(0, 160, 200)    // Water Flow - sea blue
 ```
+
+#### Orange Colors (Per-Strip Tuning)
+
+Each LED strip may display orange differently due to hardware variations. These are tuned individually:
+
+```cpp
+#define COLOR_ORANGE_WATER_DATA   CRGB(255, 90, 0)    // Water Data - standard orange
+#define COLOR_ORANGE_ELEC_FLOW    CRGB(255, 120, 0)   // Elec Flow - less reddish
+#define COLOR_ORANGE_ELEC_DATA    CRGB(255, 150, 0)   // Elec Data - more yellow-orange
+```
+
+**To adjust orange if it looks too red:** Increase the middle number (green value).
+
+| Green Value | Result |
+|-------------|--------|
+| 90 | Deep orange (more red) |
+| 120 | Standard orange |
+| 150 | Yellow-orange |
+| 180 | More yellow |
 
 #### Common Color Values
 
@@ -67,7 +85,6 @@ Colors use RGB format: `CRGB(Red, Green, Blue)` where each value is 0-255.
 | Purple | `CRGB(255, 0, 255)` |
 | Cyan | `CRGB(0, 255, 255)` |
 | White | `CRGB(255, 255, 255)` |
-| Orange (less red) | `CRGB(255, 150, 0)` |
 
 ---
 
@@ -89,14 +106,16 @@ Speed is in milliseconds. Higher = slower animation.
 | 500 | Slow |
 | 1000 | Very slow (1 sec/LED) |
 
-#### Individual Strip Speeds
+#### Individual Strip Speeds (Current Settings)
 
 ```cpp
-#define DELAY_WATER_FLOW   300    // Faster water
-#define DELAY_WATER_DATA   400    // Slower data
-#define DELAY_ELEC_FLOW    300    // Faster electricity
-#define DELAY_ELEC_DATA    400    // Slower data
+#define DELAY_WATER_FLOW   SPEED_MS_GLOBAL   // Uses global (350ms)
+#define DELAY_WATER_DATA   SPEED_MS_GLOBAL   // Uses global (350ms)
+#define DELAY_ELEC_FLOW    250               // Faster electricity flow
+#define DELAY_ELEC_DATA    SPEED_MS_GLOBAL   // Uses global (350ms)
 ```
+
+To customize, replace `SPEED_MS_GLOBAL` with a number (in milliseconds).
 
 ---
 
@@ -200,38 +219,6 @@ After Act 4, all LEDs turn off for 3 seconds, then the cycle repeats.
 
 ---
 
-## OTA (Wireless) Updates
-
-After the initial USB upload, you can update this code wirelessly via WiFi!
-
-### OTA Configuration
-
-| Setting | Value |
-|---------|-------|
-| Hostname | `esp32-led` |
-| Password | `132ElmStreet` |
-| WiFi | `ObieConnect` |
-
-### How to Upload via OTA
-
-1. Make sure ESP32 is powered on and connected to WiFi
-2. In Arduino IDE, go to **Tools → Port**
-3. Look for: `esp32-led at [IP address]`
-4. Select it
-5. Click **Upload**
-6. Enter password when prompted: `132ElmStreet`
-
-### OTA Settings in Code
-
-```cpp
-const char* wifiSSID = "ObieConnect";        // WiFi network
-const char* wifiPassword = "122ElmStreet";   // WiFi password
-const char* otaHostname = "esp32-led";       // Name in Arduino IDE
-const char* otaPassword = "132ElmStreet";    // OTA upload password
-```
-
----
-
 ## Troubleshooting
 
 | Issue | Solution |
@@ -249,9 +236,10 @@ const char* otaPassword = "132ElmStreet";    // OTA upload password
 ## File Structure
 
 ```
-Water-Electricity-Metering-Exhibit/
-├── led_visualization.ino    # Main Arduino sketch
-└── README.md                 # This file
+Water-Electricity-Metering-System/
+├── led_visualization/
+│   └── led_visualization.ino    # Main Arduino sketch
+└── README.md                     # This file
 ```
 
 ---
