@@ -81,7 +81,7 @@ unsigned long onDurations[] = {
   63000,   // [3] Relay 4: Lava Lamp - 63 seconds (1 min 3 sec)
   7000,    // [4] Relay 5: Hair Dryer - 7 seconds
   30000,   // [5] Relay 6: Mini-Fridge - 30 seconds
-  70000,   // [6] Relay 7: Meters & Data - 70 seconds (1 min 10 sec)
+  50000,   // [6] Relay 7: Meters & Data - 50 seconds
   86000    // [7] Relay 8: Geothermal - 86 seconds (1 min 26 sec)
 };
 

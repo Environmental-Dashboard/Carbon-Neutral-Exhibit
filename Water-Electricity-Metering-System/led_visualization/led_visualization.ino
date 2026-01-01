@@ -105,11 +105,11 @@
 
 // Electricity Flow LEDs - Slightly reddish, so we add more green
 // If still too red, increase 120 to 140 or 160
-#define COLOR_ORANGE_ELEC_FLOW    CRGB(255, 100, 0)
+#define COLOR_ORANGE_ELEC_FLOW    CRGB(255, 120, 0)
 
 // Electricity Data LEDs - More reddish, so we add even more green
 // If still too red, increase 150 to 170 or 180
-#define COLOR_ORANGE_ELEC_DATA    CRGB(255, 180, 0)
+#define COLOR_ORANGE_ELEC_DATA    CRGB(255, 150, 0)
 
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -131,7 +131,7 @@
  *  WARNING: Higher brightness = more power consumption
  */
 
-#define BRIGHTNESS_LEVEL   255
+#define BRIGHTNESS_LEVEL   150
 
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -156,14 +156,15 @@
  *  OPTION B: Set DIFFERENT speeds for each strip (advanced)
  */
 
-
+// ─── OPTION A: GLOBAL SPEED (affects all strips equally) ───
+#define SPEED_MS_GLOBAL   350    // All strips move at this speed
 
 // ─── OPTION B: INDIVIDUAL SPEEDS (uncomment to customize each strip) ───
 // To use individual speeds, replace SPEED_MS_GLOBAL below with your own numbers
-#define DELAY_WATER_FLOW   200   // Try: 300 for faster water
-#define DELAY_WATER_DATA   350   // Try: 400 for slower data
-#define DELAY_ELEC_FLOW    200   // Try: 250 for fast electricity
-#define DELAY_ELEC_DATA    350   // Try: 400 for slower data
+#define DELAY_WATER_FLOW   SPEED_MS_GLOBAL   // Try: 300 for faster water
+#define DELAY_WATER_DATA   SPEED_MS_GLOBAL   // Try: 400 for slower data
+#define DELAY_ELEC_FLOW    250   // Try: 250 for fast electricity
+#define DELAY_ELEC_DATA    SPEED_MS_GLOBAL   // Try: 400 for slower data
 
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -187,8 +188,8 @@
  */
 
 #define CYCLES_PER_STAGE        4       // Number of passes per strip
-#define PAUSE_BETWEEN_STAGES   0     // Pause between strips (ms)
-#define PAUSE_AFTER_FULL_CYCLE  7000    // Pause after all 4 strips done (ms)
+#define PAUSE_BETWEEN_STAGES    500     // Pause between strips (ms)
+#define PAUSE_AFTER_FULL_CYCLE  3000    // Pause after all 4 strips done (ms)
 
 
 /* ═══════════════════════════════════════════════════════════════════════════
