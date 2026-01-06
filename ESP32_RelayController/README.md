@@ -424,27 +424,6 @@ const int relayPins[] = {4, 5, 18, 19, 21, 22, 23, 25};
 | Power | 5V DC power supply for ESP32 and relays |
 | AC Power | 120V for the appliances (through relay contacts) |
 
-### Wiring Diagram
-
-```
-                         ┌─────────────────┐
-    5V DC Power ────────►│ VIN         5V ├────────► Relay Module VCC
-                         │                 │
-    Ground ─────────────►│ GND        GND ├────────► Relay Module GND
-                         │                 │
-                         │      ESP32      │
-                         │                 │
-    Relay 1 (IN1) ◄──────┤ GPIO 4          │
-    Relay 2 (IN2) ◄──────┤ GPIO 5          │
-    Relay 3 (IN3) ◄──────┤ GPIO 18         │
-    Relay 4 (IN4) ◄──────┤ GPIO 19         │
-    Relay 5 (IN5) ◄──────┤ GPIO 21         │
-    Relay 6 (IN6) ◄──────┤ GPIO 22         │
-    Relay 7 (IN7) ◄──────┤ GPIO 23         │
-    Relay 8 (IN8) ◄──────┤ GPIO 25         │
-                         └─────────────────┘
-```
-
 ### Power Notes
 
 - ESP32 receives 5V DC through VIN and GND pins
