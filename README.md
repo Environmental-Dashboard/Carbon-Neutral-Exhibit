@@ -192,3 +192,8 @@ Part of the [Environmental Dashboard](https://github.com/Environmental-Dashboard
 ---
 
 *Carbon Neutral Exhibition - Inspiring sustainable thinking through interactive displays*
+
+## Credit
+Frank Kusi Appiah
+
+
