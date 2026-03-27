@@ -94,6 +94,15 @@ const int lavaOnlyStartHour = 0;   // Start hour (0 = midnight)
 const int lavaOnlyEndHour = 6;     // End hour (6 = 6:00 AM)
 
 /* ---------------------------------------------------------------------------
+ * NIGHT MODE OVERRIDE CONFIGURATION
+ * Double-clicking the Lava Lamp button on the web interface during night mode
+ * temporarily disables night mode, allowing normal auto-cycling / web control.
+ * After this duration expires, night mode re-engages automatically.
+ * ---------------------------------------------------------------------------*/
+const unsigned long nightOverrideDuration = 300000;  // 5 minutes (300000 ms)
+const unsigned long doubleClickWindow = 1500;        // 1.5 seconds to detect double-tap
+
+/* ---------------------------------------------------------------------------
  * ACCESS POINT (FALLBACK) CONFIGURATION
  * If WiFi connection fails, ESP32 creates its own network with these settings
  * ---------------------------------------------------------------------------*/
@@ -136,6 +145,11 @@ bool inDefaultLoop = true;             // True when in automatic cycling mode
 
 int lastActivatedRelay = -1;           // Last relay that was activated
 char apSsid[32] = {0};                 // Generated AP name (includes MAC suffix)
+
+// Night mode override state (activated by double-clicking Lava Lamp button)
+bool nightModeOverride = false;
+unsigned long nightOverrideStart = 0;
+unsigned long lastLavaClickTime = 0;
 
 /* ---------------------------------------------------------------------------
  * WEB INTERFACE HTML
@@ -231,6 +245,7 @@ void turnOffAllRelays() {
  * ---------------------------------------------------------------------------*/
 bool isLavaLampOnlyTime() {
   time_t now = time(nullptr);
+  if (now < 1609459200L) return false;  // NTP not yet synced (before Jan 1 2021)
   struct tm* t = localtime(&now);
   return (t->tm_hour >= lavaOnlyStartHour && t->tm_hour < lavaOnlyEndHour);
 }
@@ -247,6 +262,16 @@ void handleRelayControl() {
   if (server.hasArg("num")) {
     int relayNum = server.arg("num").toInt() - 1;  // Convert to 0-based index
     if (relayNum >= 0 && relayNum < numRelays) {
+      // Detect double-click on Lava Lamp (relay index 3) to override night mode
+      if (relayNum == 3) {
+        if (millis() - lastLavaClickTime < doubleClickWindow) {
+          nightModeOverride = true;
+          nightOverrideStart = millis();
+          Serial.println("Night mode override activated for 5 minutes");
+        }
+        lastLavaClickTime = millis();
+      }
+
       controlRelay(relayNum);
       webInteraction = true;
       selectedRelay = relayNum;
@@ -369,8 +394,14 @@ void setup() {
 void loop() {
   server.handleClient();
 
-  // NIGHT MODE: Only run Lava Lamp during configured hours
-  if (isLavaLampOnlyTime()) {
+  // Expire the night mode override after its duration
+  if (nightModeOverride && millis() - nightOverrideStart > nightOverrideDuration) {
+    nightModeOverride = false;
+    Serial.println("Night mode override expired, resuming Lava Lamp only mode");
+  }
+
+  // NIGHT MODE: Only run Lava Lamp during configured hours (unless overridden)
+  if (isLavaLampOnlyTime() && !nightModeOverride) {
     controlRelay(3);  // Lava Lamp = relay index 3 (button #4)
     delay(10);
     return;
@@ -404,7 +435,8 @@ void loop() {
         server.handleClient(); 
         delay(1);
         // Exit if user interacts or night mode activates
-        if (webInteraction || isLavaLampOnlyTime()) { 
+        if (webInteraction) return;
+        if (isLavaLampOnlyTime() && !nightModeOverride) { 
           controlRelay(3); 
           return; 
         }
